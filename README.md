@@ -18,14 +18,11 @@ O agente de IA será projetado para rodar **100% localmente**, garantindo **segu
 ## 🏗️ Tecnologias Utilizadas
 
 - **Linguagem**: Python
-- **Frameworks**: PyTorch / TensorFlow
-- **Modelos de IA**: LLaMA (Meta) ou modelos da Hugging Face
-- **Banco de Dados**: PostgreSQL / SQLite
-- **APIs de Integração**: SAP, ERPs corporativos
-- **Infraestrutura**: Docker para virtualização local
+- **Frameworks**: Flask
+- **Modelos de IA**: Llava (Ollama)
 
 ## 🔧 Como Executar o Projeto
-
+- **Dar o comando: python app.py
 ### 📌 Pré-requisitos
 
 Antes de iniciar, certifique-se de ter os seguintes requisitos instalados:
