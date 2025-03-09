@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Procurement AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Barra Lateral -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='embraer-logo-4-1.png') }}" alt="Embraer Logo">
+            </div>
+            <h3 style="color: black;">Histórico de Conversas</h3>
+            <ul id="history-list"></ul>
+            <footer>
+                <p>Savio Mendes - Desenvolvedor</p>
+            </footer>
+        </aside>
+
+        <!-- Área do Chat -->
+        <main class="chat-container">
+            <h2>Chat GTP - Global Transactional and Procurement assistant &#127757 &#128747</h2>
+            <div class="chat-box" id="chat-box"></div>
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Digite sua mensagem...">
+                <label for="file-upload" class="custom-file-upload">📎</label>
+                <input type="file" id="file-upload" accept=".png, .jpg, .jpeg, .pdf" hidden>
+                <button onclick="sendMessage()">Enviar</button>
+                <button onclick="uploadFile()">Enviar Arquivo</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            let userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
+
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<div class="user-message">Você: ${userInput}</div>`;
+
+            let response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            });
+
+            let data = await response.json();
+            chatBox.innerHTML += `<div class="bot-message">Bot: ${data.response}</div>`;
+            document.getElementById("user-input").value = "";
+
+            // Adicionar ao histórico
+            let historyList = document.getElementById("history-list");
+            let listItem = document.createElement("li");
+            listItem.textContent = userInput;
+            historyList.appendChild(listItem);
+        }
+
+        async function uploadFile() {
+            let fileInput = document.getElementById("file-upload");
+            let file = fileInput.files[0];
+
+            if (!file) {
+                alert("Selecione um arquivo primeiro!");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", file);
+
+            let response = await fetch("/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            let data = await response.json();
+
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<div class="user-message">Arquivo enviado: ${file.name}</div>`;
+            chatBox.innerHTML += `<div class="bot-message">Bot: ${data.response}</div>`;
+
+            fileInput.value = ""; // Reset input file
+        }
+    </script>
+</body>
+</html>
